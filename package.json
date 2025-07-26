@@ -4,9 +4,12 @@
   "description": "Full Stack Open",
   "main": "src/index.js",
   "scripts": {
-    "start": "webpack-dev-server --open --mode development",
+    "dev": "NODE_ENV=development webpack serve --mode development",
+    "start": "webpack-dev-server --open --mode development --no-client-overlay --no-hot",
+    "start-test": "webpack serve --mode development --port 8080 --host localhost",
     "start-prod": "node app.js",
     "test": "jest",
+    "test:e2e": "playwright test",
     "eslint": "eslint './**/*.{js,jsx}'",
     "build": "webpack --mode production"
   },
@@ -28,6 +31,7 @@
     "@babel/plugin-transform-runtime": "^7.23.7",
     "@babel/preset-env": "^7.23.7",
     "@babel/preset-react": "^7.23.3",
+    "@playwright/test": "^1.54.1",
     "@testing-library/jest-dom": "^6.2.0",
     "@testing-library/react": "^14.1.2",
     "babel-jest": "^29.7.0",
@@ -49,11 +53,20 @@
   "dependencies": {
     "axios": "^1.6.5",
     "express": "^4.18.2",
+    "playwright": "^1.54.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.21.1"
+    "react-router-dom": "^6.21.1",
+    "sockjs": "^0.3.24",
+    "ws": "^8.16.0"
   },
   "jest": {
-    "testEnvironment": "jsdom"
+    "testEnvironment": "jsdom",
+    "testPathIgnorePatterns": [
+      "e2e.test.js"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/test/setup.js"
+    ]
   }
 }
