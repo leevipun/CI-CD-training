@@ -9,3 +9,7 @@ app.use(express.static("dist"));
 
 app.listen(PORT, () => {
 });
+
+app.get('/version', (res) => {
+  res.send('1') // change this string to ensure a new version deployed
+})
