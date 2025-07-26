@@ -38,5 +38,5 @@ jobs:
           npm test
       - name: Run end-to-end tests
         run: |
+          npx playwright install
           npm run test:e2e
-          
