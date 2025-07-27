@@ -77,7 +77,7 @@ jobs:
           fi
       - name: Discord notification on success
         if: success() && github.event_name == 'push' && steps.check_skip.outputs.skip == 'false'
-        uses: Ilshidur/action-discord@v3
+        uses: rjstone/discord-webhook-notify@v2
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
           username: Leepu
@@ -97,7 +97,7 @@ jobs:
 
       - name: Discord notification on failure
         if: failure() && github.event_name == 'push'
-        uses: Ilshidur/action-discord@v3
+        uses: rjstone/discord-webhook-notify@v2
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
           username: Leepu
