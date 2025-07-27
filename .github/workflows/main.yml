@@ -137,5 +137,5 @@ jobs:
       - name: Bump version and tag release
         if: success() && github.event_name == 'push' && steps.check_skip.outputs.skip == 'false'
         uses: anothrNick/github-tag-action@v1
-        with:
+        env:
           github_token: ${{ secrets.GH_PAT }}
