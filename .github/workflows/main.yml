@@ -51,3 +51,11 @@ jobs:
         run: |
           echo "Deployment triggered"
           curl ${{ secrets.WEB_HOOK }}
+      - name: Create status report
+        run: |
+          echo "## Workflow Status" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Build: Successful" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Tests: Passed" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Lint: No issues" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Deployment: Triggered" >> $GITHUB_STEP_SUMMARY
+
