@@ -84,7 +84,7 @@ jobs:
           avatarUrl: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
           text: "Deployment successful! 🎉"
           severity: info
-          embeds: |
+          Embed: |
             [
               {
                 "title": "Deployment Status",
@@ -105,7 +105,7 @@ jobs:
           avatarUrl: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
           text: "Deployment failed! ❌"
           severity: error
-          embeds: |
+          Embed: |
             [
               {
                 "title": "Deployment Status",
