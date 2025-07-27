@@ -10,6 +10,7 @@ on:
 
 jobs:
   hello_world_job:
+    name: hello-world  # 👈 Tämä rivi lisätään!
     runs-on: ubuntu-latest
     steps:
       - name: Say hello
