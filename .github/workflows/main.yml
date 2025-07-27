@@ -95,4 +95,4 @@ jobs:
         if: success() && github.event_name == 'push' && steps.check_skip.outputs.skip == 'false'
         uses: anothrNick/github-tag-action@1.67.0
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GH_PAT }}
