@@ -15,7 +15,7 @@ jobs:
                 url: 'https://example.com' # Replace with your service URL
                 follow-redirect: false
                 max-attempts: 3
-                retry-delay: 10
+                retry-delay: 10s
 
               
         
