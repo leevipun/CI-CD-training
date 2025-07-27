@@ -107,7 +107,7 @@ jobs:
     name: Discord Notification
     needs: [simple_deployment_pipeline, tag_release]
     runs-on: ubuntu-24.04
-    if: always() # This is key - it runs even if previous jobs fail
+    if: always() && ${{ github.event_name != 'pull_request' }} && !contains(github.event.head_commit.message, '#skip') 
     steps:
       - name: Determine Status
         id: status_check
