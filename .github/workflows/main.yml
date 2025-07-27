@@ -3,6 +3,10 @@ name: hello-world
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+
 
 jobs:
   hello_world_job:
@@ -43,6 +47,7 @@ jobs:
         run: |
           npm run test:e2e
       - name: Deploy to production
+        if: success() && github.event_name == 'pull_request' && github.event.action == 'merged'
         run: |
           echo "Deployment triggered"
           curl ${{ secrets.WEB_HOOK }}
