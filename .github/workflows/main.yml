@@ -47,7 +47,7 @@ jobs:
         run: |
           npm run test:e2e
       - name: Deploy to production
-        if: success() && github.event_name == 'pull_request' && github.event.action == 'merged'
+        if: success() && github.event_name == 'push'
         run: |
           echo "Deployment triggered"
           curl ${{ secrets.WEB_HOOK }}
