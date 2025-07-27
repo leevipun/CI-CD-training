@@ -127,10 +127,5 @@ jobs:
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ steps.status_check.outputs.status }}
-          title: "Pipeline for `${{ github.repository }}`"
-          description: |
-            Workflow **${{ github.workflow }}** has finished with status: **${{ steps.status_check.outputs.status_text }}**
-            Commit: `${{ github.sha }}` by `${{ github.actor }}`
-            View Workflow Run
           color: ${{ steps.status_check.outputs.color }}
           username: "GitHub Actions"
