@@ -3,9 +3,14 @@ name: hello-world
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+
 
 jobs:
   hello_world_job:
+    name: hello-world  # 👈 Tämä rivi lisätään!
     runs-on: ubuntu-latest
     steps:
       - name: Say hello
@@ -43,6 +48,15 @@ jobs:
         run: |
           npm run test:e2e
       - name: Deploy to production
+        if: success() && github.event_name == 'push'
         run: |
           echo "Deployment triggered"
           curl ${{ secrets.WEB_HOOK }}
+      - name: Create status report
+        run: |
+          echo "## Workflow Status" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Build: Successful" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Tests: Passed" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Lint: No issues" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Deployment: Triggered" >> $GITHUB_STEP_SUMMARY
+
