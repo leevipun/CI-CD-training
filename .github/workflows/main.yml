@@ -7,10 +7,9 @@ on:
     branches: [main]
     types: [opened, synchronize]
 
-
 jobs:
   hello_world_job:
-    name: hello-world  # 👈 Tämä rivi lisätään!
+    name: hello-world
     runs-on: ubuntu-latest
     steps:
       - name: Say hello
@@ -26,6 +25,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check for skip flag in commit message
+        id: check_skip
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          if echo "$COMMIT_MSG" | grep -q "#skip"; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -48,7 +58,7 @@ jobs:
         run: |
           npm run test:e2e
       - name: Deploy to production
-        if: success() && github.event_name == 'push'
+        if: success() && github.event_name == 'push' && steps.check_skip.outputs.skip == 'false'
         run: |
           echo "Deployment triggered"
           curl ${{ secrets.WEB_HOOK }}
@@ -58,5 +68,31 @@ jobs:
           echo "✅ Build: Successful" >> $GITHUB_STEP_SUMMARY
           echo "✅ Tests: Passed" >> $GITHUB_STEP_SUMMARY
           echo "✅ Lint: No issues" >> $GITHUB_STEP_SUMMARY
-          echo "✅ Deployment: Triggered" >> $GITHUB_STEP_SUMMARY
-
+          if [[ "${{ steps.check_skip.outputs.skip }}" == "true" ]]; then
+            echo "⏭️ Deployment: Skipped due to #skip in commit message" >> $GITHUB_STEP_SUMMARY
+          elif [[ "${{ github.event_name }}" == "push" ]]; then
+            echo "✅ Deployment: Triggered" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "ℹ️ Deployment: Not triggered (not a push to main)" >> $GITHUB_STEP_SUMMARY
+          fi
+  tag_release:
+    runs-on: ubuntu-latest
+    needs: simple_deployment_pipeline
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check for skip flag in commit message
+        id: check_skip
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          if echo "$COMMIT_MSG" | grep -q "#skip"; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+      - name: Bump version and tag release
+        if: success() && github.event_name == 'push' && steps.check_skip.outputs.skip == 'false'
+        uses: anothrNick/github-tag-action@v1.37.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
