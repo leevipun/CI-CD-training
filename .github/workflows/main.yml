@@ -75,9 +75,28 @@ jobs:
           else
             echo "ℹ️ Deployment: Not triggered (not a push to main)" >> $GITHUB_STEP_SUMMARY
           fi
+      - name: Discord notification
+        if: success() && github.event_name == 'push' && steps.check_skip.outputs.skip == 'false'
+        uses: Ilshidur/action-discord@v3
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
+          username: Leepu
+          avatar-url: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
+          content: "Deployment successful! 🎉"
+          embeds: |
+            [
+              {
+                "title": "Deployment Status",
+                "description": "The deployment was successful.",
+                "color": 3066993
+              }
+            ]
+          footer: "Thank you for using our service!"       
   tag_release:
     runs-on: ubuntu-latest
     needs: simple_deployment_pipeline
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -93,6 +112,6 @@ jobs:
           fi
       - name: Bump version and tag release
         if: success() && github.event_name == 'push' && steps.check_skip.outputs.skip == 'false'
-        uses: anothrNick/github-tag-action@1.67.0
+        uses: anothrNick/github-tag-action@v1
         with:
           github_token: ${{ secrets.GH_PAT }}
